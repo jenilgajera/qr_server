@@ -11,7 +11,7 @@ const app = express();
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://your-frontend-url.com'], // Allow requests from these origins
+    origin: ['http://localhost:5173', 'https://fire-noc-app.vercel.app/'], // Allow requests from these origins
     methods: ['GET', 'POST'], // Allow only specific HTTP methods
     credentials: true, // Allow cookies and credentials
   })
