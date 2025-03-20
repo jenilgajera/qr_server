@@ -1,8 +1,41 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const nocRoutes = require('./routes/nocRoutes');
 const path = require('path');
 require('dotenv').config(); // Load environment variables
+
+// Connect to MongoDB
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 30000, // Increase timeout
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 30000,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      heartbeatFrequencyMS: 10000,
+    });
+    
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    
+    // Add connection error handling
+    mongoose.connection.on('error', err => {
+      console.error('MongoDB connection error:', err);
+    });
+    
+    // Handle disconnections
+    mongoose.connection.on('disconnected', () => {
+      console.log('MongoDB disconnected. Attempting to reconnect...');
+    });
+  } catch (error) {
+    console.error(`Error connecting to MongoDB: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+// Call the connectDB function
+connectDB();
 
 const app = express();
 
