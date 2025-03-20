@@ -11,9 +11,10 @@ const nocSchema = new mongoose.Schema(
     buildingHeight: { type: Number, required: true },
     purpose: { type: String, required: true },
     status: { type: String, default: 'approved', enum: ['pending', 'approved', 'rejected'] },
-    certificateNumber: { type: String, unique: true },
+    certificateNumber: { type: String, unique: true }, // Keep this unique
     validUntil: { type: Date },
     certificateUrl: { type: String },
+    registrationNumber: { type: String }, // Removed unique: true
   },
   { timestamps: true }
 );
