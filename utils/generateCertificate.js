@@ -98,7 +98,7 @@ const generateCertificate = (nocData) => {
       // QR code (if image is available)
       try {
         // You'll need to generate this QR code image
-        doc.image('utils/qr-code.png', {
+        doc.image('utils/qr-codes.png', {
           fit: [100, 100],
           align: 'right',
           valign: 'center'
