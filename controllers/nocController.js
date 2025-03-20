@@ -15,6 +15,24 @@ const registerNoc = async (req, res) => {
       purpose,
     } = req.body;
 
+    // Validate required fields
+    if (!name || !address || !contactNumber || !email || !buildingType || !buildingArea || !buildingHeight || !purpose) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    // Validate contact number format
+    const phoneRegex = /^\d{10}$/; // Assumes 10-digit phone number
+    if (!phoneRegex.test(contactNumber)) {
+      return res.status(400).json({ message: "Invalid contact number" });
+    }
+
+    // Create new NOC
     const newNoc = new Noc({
       name,
       address,
@@ -28,8 +46,8 @@ const registerNoc = async (req, res) => {
 
     const savedNoc = await newNoc.save();
 
-    // Update the certificateUrl with the complete server URL
-    savedNoc.certificateUrl = `https://qr-server-x32l.onrender.com/certificate/${savedNoc._id}`;
+    // Generate certificate URL
+    savedNoc.certificateUrl = `${process.env.FRONTEND_URL || 'https://fire-noc-app.vercel.app'}/certificate/${savedNoc._id}`;
     await savedNoc.save();
 
     res.status(201).json(savedNoc);

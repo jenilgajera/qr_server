@@ -117,7 +117,7 @@ const generateCertificate = (nocData) => {
       const footerY = doc.page.height - 50;
       doc.fontSize(10).text('This certificate confirms compliance with fire safety standards.', 50, footerY, { align: 'center' });
       doc.moveDown(0.5);
-      doc.fontSize(10).text(`Verify this certificate online at https://qr-server-x32l.onrender.com/certificate/${nocData._id}`, { align: 'center' });
+      doc.fontSize(10).text(`Verify this certificate online at https://fire-noc-app.vercel.app/certificate/${nocData._id}`, { align: 'center' });
       
       // Finalize the PDF
       doc.end();

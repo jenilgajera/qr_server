@@ -35,7 +35,7 @@ nocSchema.pre('save', function (next) {
 
   // Fix the certificateUrl to use the complete server URL
   if (!this.certificateUrl) {
-    this.certificateUrl = `https://qr-server-x32l.onrender.com/certificate/${this._id}`;
+    this.certificateUrl = `https://fire-noc-app.vercel.app/certificate/${this._id}`;
   }
 
   next();
