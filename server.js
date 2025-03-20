@@ -1,41 +1,52 @@
 const express = require('express');
-const cors = require('cors'); // Import the cors package
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+const cors = require('cors');
 const nocRoutes = require('./routes/nocRoutes');
-
-dotenv.config();
+const path = require('path');
 
 const app = express();
 
-// Enable CORS for all routes
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'https://fire-noc-app.vercel.app'], // Allow requests from these origins
-    methods: ['GET', 'POST'], // Allow only specific HTTP methods
-    credentials: true, // Allow cookies and credentials
-  })
-);
-
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch((err) => console.error('MongoDB Connection Error:', err));
-
-// Routes
+// API routes
 app.use('/api/noc', nocRoutes);
 
-// Serve static files in production
+// Add a direct route for certificate viewing that matches the QR code URL
+app.get('/certificate/:id', (req, res) => {
+  // Redirect to the frontend certificate view page
+  res.redirect(`${process.env.FRONTEND_URL || 'https://fire-noc-app.vercel.app'}/view-certificate/${req.params.id}`);
+  
+  // Alternatively, you can serve an HTML page directly:
+  /*
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Fire NOC Certificate</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+      <div class="container mt-5 text-center">
+        <h2>Fire NOC Certificate</h2>
+        <p>Click the button below to download your certificate.</p>
+        <a href="/api/noc/certificate/${req.params.id}" class="btn btn-danger">Download Certificate</a>
+      </div>
+    </body>
+    </html>
+  `);
+  */
+});
+
+// Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build')); // Serve the frontend build folder
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')); // Serve index.html for all routes
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
 }
 
-// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

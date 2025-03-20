@@ -14,6 +14,7 @@ const nocSchema = new mongoose.Schema(
     certificateNumber: { type: String, unique: true },
     validUntil: { type: Date },
     certificateUrl: { type: String },
+    registrationNumber: { type: String },
   },
   { timestamps: true }
 );
@@ -32,11 +33,12 @@ nocSchema.pre('save', function (next) {
     this.validUntil = oneYearFromNow;
   }
 
+  // Fix the certificateUrl to use the complete server URL
   if (!this.certificateUrl) {
-    this.certificateUrl = `${process.env.BASE_URL}/api/noc/certificate/${this._id}`;
+    this.certificateUrl = `https://qr-server-x32l.onrender.com/certificate/${this._id}`;
   }
 
   next();
 });
 
-module.exports = mongoose.model('Noc', nocSchema);
+module.exports = mongoose.model('Noc', nocSchema);  
