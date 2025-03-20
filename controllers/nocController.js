@@ -15,6 +15,7 @@ const registerNoc = async (req, res) => {
       purpose,
     } = req.body;
 
+    // Create a new NOC document
     const newNoc = new Noc({
       name,
       address,
@@ -26,7 +27,10 @@ const registerNoc = async (req, res) => {
       purpose,
     });
 
+    // Save the document to the database
     const savedNoc = await newNoc.save();
+
+    // Respond with the saved NOC data
     res.status(201).json(savedNoc);
   } catch (error) {
     console.error('Register NOC error:', error);
@@ -41,6 +45,8 @@ const getNocById = async (req, res) => {
     if (!noc) {
       return res.status(404).json({ message: 'NOC not found' });
     }
+
+    // Respond with the NOC data
     res.json(noc);
   } catch (error) {
     console.error('Get NOC error:', error);
@@ -56,9 +62,14 @@ const downloadCertificate = async (req, res) => {
       return res.status(404).json({ message: 'NOC not found' });
     }
 
+    // Generate the PDF certificate
     const pdfBuffer = await generateCertificate(noc);
+
+    // Set response headers for PDF download
     res.contentType('application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=FireNOC_${noc._id}.pdf`);
+
+    // Send the PDF buffer as the response
     res.send(pdfBuffer);
   } catch (error) {
     console.error('Download certificate error:', error);

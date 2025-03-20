@@ -4,6 +4,7 @@ const generateCertificate = (noc) => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ size: 'A4', layout: 'landscape' });
 
+    // Create a buffer to store the PDF
     const buffers = [];
     doc.on('data', buffers.push.bind(buffers));
     doc.on('end', () => {
@@ -25,6 +26,7 @@ const generateCertificate = (noc) => {
     doc.moveDown();
     doc.text(`Valid Until: ${noc.validUntil.toLocaleDateString()}`);
 
+    // Finalize the PDF
     doc.end();
   });
 };

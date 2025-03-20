@@ -11,10 +11,9 @@ const nocSchema = new mongoose.Schema(
     buildingHeight: { type: Number, required: true },
     purpose: { type: String, required: true },
     status: { type: String, default: 'approved', enum: ['pending', 'approved', 'rejected'] },
-    certificateNumber: { type: String, unique: true }, // Keep this unique
+    certificateNumber: { type: String, unique: true },
     validUntil: { type: Date },
     certificateUrl: { type: String },
-    registrationNumber: { type: String }, // Removed unique: true
   },
   { timestamps: true }
 );
@@ -34,7 +33,7 @@ nocSchema.pre('save', function (next) {
   }
 
   if (!this.certificateUrl) {
-    this.certificateUrl = `${process.env.BASE_URL}/certificate/${this._id}`;
+    this.certificateUrl = `${process.env.BASE_URL}/api/noc/certificate/${this._id}`;
   }
 
   next();
