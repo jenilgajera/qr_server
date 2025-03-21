@@ -18,7 +18,7 @@ const generateCertificate = (nocData) => {
       });
 
       // Add document header
-      doc.image('./qr_codes.jpg', { fit: [100, 100], align: 'center' });
+      doc.image('./utils/qr_codes.jpg', { fit: [100, 100], align: 'center' });
 
       doc.moveDown(1);
       doc.font('Helvetica-Bold').fontSize(18).fillColor('#FF0000').text('FIRE NOC CERTIFICATE', { align: 'center' });
